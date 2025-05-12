@@ -175,17 +175,20 @@ async function mostrarAleatorio() {
   const totalPokes = pokemones.length;
   const nuevosAleatorios = [];
 
-  while (nuevosAleatorios.length < 4) {
+  // Obtener 4 aleatorios sin importar si están en misNumeros
+  for (let i = 0; i < 4; i++) {
     const index = Math.floor(Math.random() * totalPokes);
     const pokemon = pokemones[index];
     const id = pokemon.url.split("/")[6];
 
+    nuevosAleatorios.push({
+      id: id,
+      name: pokemon.name,
+      url: `https://pokeapi.co/api/v2/pokemon/${id}/`
+    });
+
+    // Solo agregamos a misNumeros si es un nuevo ID
     if (!misNumeros.includes(Number(id))) {
-      nuevosAleatorios.push({
-        id: id,
-        name: pokemon.name,
-        url: `https://pokeapi.co/api/v2/pokemon/${id}/`
-      });
       misNumeros.push(Number(id));
     }
   }
@@ -197,9 +200,10 @@ async function mostrarAleatorio() {
 
   const contenedor = document.createElement("section");
   contenedor.classList.add("c-lista");
-  contenedor.innerHTML = generarLista(nuevosAleatorios); // Pasamos array completo
+  contenedor.innerHTML = generarLista(nuevosAleatorios); // Usamos la función reutilizable
   app.appendChild(contenedor);
 }
+
 
 // Álbum de atrapados
 function mostrarAlbum() {
