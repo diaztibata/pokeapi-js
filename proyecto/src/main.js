@@ -1,3 +1,34 @@
+import { supabase } from "./supabase.js";
+import { mostrarLogin } from "./login.js";
+import { mostrarDatos } from "./usuario.js";
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const user = await validarSesion();
+  if (!user) {
+    document.querySelector(".c-nav").innerHTML = ""  
+    document.querySelector("#app").innerHTML = "no login"  
+    mostrarLogin();
+  } else {
+    console.log('Usuario logueado:', user.email);
+    General(); // Aquí pones tu lógica para cargar contenido
+    document.querySelector(".c-nav").innerHTML = `
+        <button class="c-nav-item" onclick="General()">Home</button>
+        <button class="c-nav-item" onclick="mostrarAlbum()">Album</button>
+        <button class="c-nav-item" onclick="mostrarAleatorio()">Aleatorio</button>
+        <button class="c-nav-item" onclick="mostrarFavoritos()">Favoritos</button>
+        <button class="c-nav-item"  onclick="mostrarDatos()">Usuario</button>
+    `
+  }
+});
+
+async function validarSesion() {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.user || null;
+}
+
+
+
+
 let pokemones = [];
 let totalPokes = 1026;
 
@@ -232,10 +263,7 @@ function mostrarAlbum() {
   app.appendChild(seccion);
 }
 
-// Inicializar
-document.addEventListener("DOMContentLoaded", () => {
-  General();
-});
+
 
 // Exportar funciones globales
 window.General = General;
@@ -246,3 +274,4 @@ window.actualizarIconoFavorito = actualizarIconoFavorito;
 window.mostrarFavoritos = mostrarFavoritos;
 window.mostrarAleatorio = mostrarAleatorio;
 window.mostrarAlbum = mostrarAlbum;
+window.mostrarDatos = mostrarDatos;
